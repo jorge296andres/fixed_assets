@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+    database:
+        image: postgres:14-alpine
+        container_name: db_postgres
+        volumes:
+            - ./postgres-scripts:/docker-entrypoint-initdb.d
+        ports:
+            - '5432:5432'
+        environment:
+            POSTGRES_DB: db_fixed_assets
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: admin
+    frontend:
+        image: fixed-assets-app:latest
+        build:
+          context: fixed-assets-app
+          dockerfile: ./Dockerfile
+        ports:
+          - 4200:4200
+    backend:
+        image: fixed-assets-back:latest
+        build:
+          context: FixedAssets
+          dockerfile: ./Dockerfile
+        ports:
+          - 8080:8080
+        depends_on:
+            - database
+        environment:
+          - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/db_fixed_assets
+          

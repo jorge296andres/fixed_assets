@@ -1,0 +1,470 @@
+<!-- Table -->
+<div class="container mt-4">
+  <div class="row align-items-center">
+    <div *ngIf="errorResponse" class="col-lg-8 col-md-12 col-xl-12">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p class="alert-heading">REASON: {{errorResponse.reason}}</p>
+        <p class="alert-heading">CODE: {{errorResponse.code}}</p>
+        <p class="alert-heading">DOMAIN: {{errorResponse.domain}}</p>
+        <p class="alert-heading">DESCRIPTION: {{errorResponse.description}}</p>
+        <p class="alert-heading">TIMESTAMP: {{errorResponse.timestamp}}</p>
+        <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="successResponse" class="alert alert-success" role="alert">
+      <b>SUCCESS!</b> {{successResponse}}
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+      </button>
+    </div>
+    <div class="col-md-6">
+
+      <div class="mb-3">
+        <h5 class="card-title">Fixed Assets <span class="text-muted fw-normal ms-2">({{fixedAssets.length}})</span></h5>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+        <div>
+          <a (click)="onOpenModal(null, 'add')" data-bs-toggle="modal" data-bs-target="#addFixedModal"
+            class="btn btn-primary"><i class="bx bx-plus me-1"></i> Add New</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form class="form-inline my-2 my-lg-0">
+    <input type="search" (ngModelChange)="searchFixed(key.value)" #key="ngModel" ngModel name="key" id="searchName"
+      class="form-control mr-sm-2" placeholder="Search Fixed..." required>
+  </form>
+  <div class="row">
+    <div class="col-lg-12">
+      <div *ngIf="fixedAssets?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+        <div class="alert alert-info" role="alert">
+          <h4 class="alert-heading">NO FIXED ASSETS!</h4>
+          <p>No Fixed Assets were found.</p>
+        </div>
+      </div>
+      <div class="">
+        <div class="table-responsive">
+          <table class="table project-list-table table-nowrap align-middle table-borderless text-center">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 200px;">Action</th>
+                <th scope="col">Inventory Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Assigned To</th>
+                <th scope="col">Description</th>
+                <th scope="col">Serial</th>
+                <th scope="col">Type</th>
+                <th scope="col">Purchase Value</th>
+                <th scope="col">Purchase Date</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Height</th>
+                <th scope="col">Width</th>
+                <th scope="col">Length</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let fixed of fixedAssets">
+                <td>
+                  <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                      <a (click)="onOpenModal(fixed, 'edit')" type="button" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#editFixedModal" data-bs-placement="top" title="Edit"
+                        class="px-2 text-primary"><i class="bx bx-pencil font-size-18"></i></a>
+                    </li>
+                  </ul>
+                </td>
+                <td><b>{{fixed?.inventory_id}}</b></td>
+                <td>{{fixed?.name}}</td>
+                <td (click)="onOpenModal(fixed, 'assignFixed')" data-bs-toggle="modal"
+                  data-bs-target="#assignFixedModal" data-bs-placement="top" type="button" *ngIf="fixed.area"><span
+                    class="badge badge-soft-info mb-0">AREA: {{fixed.area.area_name}} - {{fixed.area.city}}</span>
+                </td>
+                <td (click)="onOpenModal(fixed, 'assignFixed')" data-bs-toggle="modal"
+                  data-bs-target="#assignFixedModal" data-bs-placement="top" type="button" *ngIf="fixed.person"><span
+                    class="badge badge-soft-success mb-0">PERSON:
+                    {{fixed.person.person_name.toUpperCase()}}</span>
+                </td>
+                <td (click)="onOpenModal(fixed, 'assignFixed')" data-bs-toggle="modal"
+                  data-bs-target="#assignFixedModal" data-bs-placement="top" type="button"
+                  *ngIf="!fixed.person && !fixed.area"><span class="badge badge-soft-danger mb-0">NOT ASSIGNED
+                    YET</span></td>
+                <td>{{fixed?.description}}</td>
+                <td>{{fixed?.serial}}</td>
+                <td>{{fixed?.type}}</td>
+                <td>$ {{fixed?.purchase_value}}</td>
+                <td>{{fixed?.purchase_date}}</td>
+                <td>{{fixed?.weight}} gr</td>
+                <td>{{fixed?.height}} cm</td>
+                <td>{{fixed?.width}} cm</td>
+                <td>{{fixed?.length}} cm</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Forms of Searchs -->
+<div class="mt-4 container">
+  <div class="row align-items-center">
+    <div class="col-md-3">
+      <form #findForm="ngForm" class="form-inline my-2 my-lg-0">
+        <input type="number" ngModel name="inventory_id" id="inventory_id" class="form-control"
+          placeholder="Search Fixed Asset By Id..." required>
+        <button (click)="getFixedById(findForm.value)" type="submit" class="mt-2 btn-block btn btn-primary ">Search by
+          Id</button>
+      </form>
+    </div>
+
+    <div class="col-md-3">
+      <form #findBySerialForm="ngForm" class="form-inline my-2 my-lg-0">
+        <input type="text" ngModel name="serial" id="serial" class="form-control"
+          placeholder="Search Fixed Asset By Serial..." required>
+        <button (click)="getFixedBySerial(findBySerialForm.value)" type="submit" class="mt-2 btn btn-primary">Search by
+          Serial</button>
+      </form>
+    </div>
+
+    <div class="col-md-3">
+      <form #findByTypeForm="ngForm" class="form-inline my-2 my-lg-0">
+        <input type="text" ngModel name="type" id="type" class="form-control"
+          placeholder="Search Fixed Asset By Type..." required>
+        <button (click)="getFixedByType(findByTypeForm.value)" type="submit" class=" mt-2 btn btn-primary">Search by
+          Type</button>
+      </form>
+    </div>
+
+    <div class="col-md-3">
+      <form #findByPurchaseDateForm="ngForm" class="form-inline my-2 my-lg-0">
+        <input type="date" ngModel name="purchase_date" id="purchase_date" class="form-control"
+          placeholder="Search Fixed Asset By Purchase Date..." required>
+        <button (click)="getFixedByPurchaseDate(findByPurchaseDateForm.value)" type="submit"
+          class=" mt-2 btn btn-primary">Search by Date</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Modal -->
+<div class="modal fade" id="addFixedModal" tabindex="-1" role="dialog" aria-labelledby="addFixedModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addFixedModalLabel">Add Fixed Asset</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddFixed(addForm)">
+          <div class="row">
+            <div>
+              <div class="mb-4 form-group">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" ngModel name="name" id="name" class="form-control" required>
+              </div>
+            </div>
+            <div>
+              <div class="mb-4">
+                <label for="type" class="form-label">Type</label>
+                <input type="text" ngModel name="type" id="type" class="form-control" required>
+              </div>
+            </div>
+            <div>
+              <div class="mb-4">
+                <label for="serial" class="form-label">Serial</label>
+                <input ngModel name="serial" id="serial" type="text" class="form-control" required>
+              </div>
+            </div>
+            <div>
+              <div class="mb-4">
+                <label for="description" class="form-label">Description</label>
+                <textarea ngModel name="description" id="description" class="form-control" rows="3" required></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="purchase_date" class="form-label">Purchase Date</label>
+                <input ngModel name="purchase_date" id="purchase_date" type="date" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="purchase_value" class="form-label">Purchase Value</label>
+                <input ngModel name="purchase_value" id="purchase_value" type="number" class="form-control" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="weight" class="form-label">Weight</label>
+                <input ngModel name="weight" id="weight" type="number" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="height" class="form-label">Height</label>
+                <input ngModel name="height" id="height" type="number" class="form-control" required>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="width" class="form-label">Width</label>
+                <input ngModel name="width" id="width" type="number" class="form-control" required>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="length" class="form-label">Length</label>
+                <input ngModel name="length" id="length" type="number" class="form-control" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="add-fixed-form" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editFixedModal" tabindex="-1" role="dialog" aria-labelledby="editFixedModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editFixedModalLabel">Edit Fixed {{editFixed?.name}}</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="form-group">
+            <input type="hidden" ngModel="{{editFixed?.inventory_id}}" name="inventory_id" class="form-control" id="id"
+              placeholder="inventory_id">
+            <label for="name">Name</label>
+            <input type="text" ngModel="{{editFixed?.name}}" name="name" class="form-control" id="name"
+              aria-describedby="emailHelp" placeholder="Name">
+          </div>
+          <div>
+            <div class="mb-4">
+              <label for="type" class="form-label">Type</label>
+              <input type="text" ngModel="{{editFixed?.type}}" name="type" id="type" class="form-control">
+            </div>
+          </div>
+          <div>
+            <div class="mb-4">
+              <label for="serial" class="form-label">Serial</label>
+              <input ngModel="{{editFixed?.serial}}" name="serial" id="serial" type="text" class="form-control">
+            </div>
+          </div>
+          <div>
+            <div class="mb-4">
+              <label for="description" class="form-label">Description</label>
+              <textarea ngModel="{{editFixed?.description}}" name="description" id="description" class="form-control"
+                rows="3"></textarea>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="purchase_date" class="form-label">Purchase Date</label>
+                <input ngModel="{{editFixed?.purchase_date}}" name="purchase_date" id="purchase_date" type="date"
+                  class="form-control">
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="purchase_value" class="form-label">Purchase Value</label>
+                <input ngModel="{{editFixed?.purchase_value}}" name="purchase_value" id="purchase_value" type="number"
+                  class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="weight" class="form-label">Weight</label>
+                <input ngModel="{{editFixed?.weight}}" name="weight" id="weight" type="number" class="form-control">
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="height" class="form-label">Height</label>
+                <input ngModel="{{editFixed?.height}}" name="height" id="height" type="number" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="width" class="form-label">Width</label>
+                <input ngModel="{{editFixed?.width}}" name="width" id="width" type="number" class="form-control">
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label for="length" class="form-label">Length</label>
+                <input ngModel="{{editFixed?.length}}" name="length" id="length" type="number" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="edit-fixed-form" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
+            <button [disabled]="editForm.invalid" (click)="onUpdateFixed(editForm.value)" data-dismiss="modal"
+              class="btn btn-primary">Save
+              changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Fixed Modal -->
+<div class="modal fade" data-bs-backdrop="static" id="assignFixedModal" tabindex="-1" role="dialog"
+  aria-labelledby="assignFixedModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assignFixedModalLabel">Assign Fixed Asset: {{assignFixed?.name}}</h5>
+        <small>Assign the fixed asset to an Area or to a Person</small>
+        <button (click)="cleanChecks()" type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #assignFixedForm="ngForm">
+          <div class="form-group">
+            <input type="hidden" ngModel="{{assignFixed?.inventory_id}}" name="fixed_id" class="form-control"
+              id="fixed_id" placeholder="fixed_id">
+          </div>
+          <div *ngIf="!assignFixed?.area && !assignFixed?.person">
+            <div>
+              <h6 class="mb-0">Assign to Person</h6>
+              <small>Assign the fixed to a Person.</small>
+            </div>
+            <div class="form-check form-switch">
+              <input [formControl]="assign_to_person" class="form-check-input" type="checkbox" role="switch"
+                id="flexSwitchCheckDefault">
+            </div>
+
+            <div>
+              <h6 class="mb-0">Assign to Area</h6>
+              <small>Assign the fixed to an Area.</small>
+            </div>
+            <div class="form-check form-switch">
+              <input [formControl]="assign_to_area" class="form-check-input" type="checkbox" role="switch"
+                id="flexSwitchCheckDefault">
+            </div>
+          </div>
+          <div *ngIf="assignFixed?.area">
+            <div>
+              <h6 class="mb-0">Assign to Person</h6>
+              <small>Assign the fixed to a Person.</small>
+            </div>
+            <div class="form-check form-switch">
+              <input [formControl]="assign_to_person" class="form-check-input" type="checkbox" role="switch"
+                id="flexSwitchCheckDefault">
+            </div>
+          </div>
+          <div *ngIf="assignFixed?.person">
+            <div>
+              <h6 class="mb-0">Assign to Area</h6>
+              <small>Assign the fixed to an Area.</small>
+            </div>
+            <div class="form-check form-switch">
+              <input [formControl]="assign_to_area" class="form-check-input" type="checkbox" role="switch"
+                id="flexSwitchCheckDefault">
+            </div>
+          </div>
+          <div>
+            <h6 class="mb-0">Force Reassign</h6>
+            <small>Force the reassignation of the Fixed.</small>
+          </div>
+          <div class="form-check form-switch">
+            <input id="force_reassign" name="force_reassign" ngModel=true class="form-check-input" type="checkbox"
+              role="switch" checked="">
+          </div>
+          <div *ngIf="assign_to_area.value && !assign_to_person.value" class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label class="form-label">Area</label>
+                <select name="area_id" [(ngModel)]="areas" class="select2 form-control select2-hidden-accessible"
+                  data-select2-placeholder="Select area" data-select2-id="select2-data-7-809c" tabindex="1"
+                  aria-hidden="true" required>
+                  <option *ngFor="let area of areas" value="{{area.area_id}}">{{area.area_name}} - {{area.city}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="assignFixed?.area && !assign_to_area.value && !assign_to_person.value" class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label class="form-label">Area</label>
+                <select name="area_id" [(ngModel)]="areas" class="select2 form-control select2-hidden-accessible"
+                  data-select2-placeholder="Select area" data-select2-id="select2-data-7-809c" tabindex="1"
+                  aria-hidden="true" required>
+                  <option *ngFor="let area of areas" value="{{area.area_id}}">{{area.area_name}} - {{area.city}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="assign_to_person.value && !assign_to_area.value" class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label class="form-label">Person</label>
+                <select name="person_id" [(ngModel)]="persons" class="select2 form-control select2-hidden-accessible"
+                  data-select2-placeholder="Select city" data-select2-id="select2-data-7-809c" tabindex="1"
+                  aria-hidden="true" required>
+                  <option *ngFor="let person of persons" value="{{person.person_id}}">{{person.person_name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="assignFixed?.person && !assign_to_area.value && !assign_to_person.value" class="row">
+            <div class="col-lg-6">
+              <div class="mb-3">
+                <label class="form-label">Person</label>
+                <select name="person_id" [(ngModel)]="persons" class="select2 form-control select2-hidden-accessible"
+                  data-select2-placeholder="Select city" data-select2-id="select2-data-7-809c" tabindex="1"
+                  aria-hidden="true" required>
+                  <option *ngFor="let person of persons" value="{{person.person_id}}">{{person.person_name}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button (click)="cleanChecks()" type="button" id="assign-fixed-form" data-bs-dismiss="modal"
+              class="btn btn-secondary">Close</button>
+            <button [disabled]="assignFixedForm.invalid" (click)="onAssignFixed(assignFixedForm.value)"
+              data-dismiss="modal" class="btn btn-primary">Save
+              changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

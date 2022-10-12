@@ -1,0 +1,469 @@
+{
+	"info": {
+		"_postman_id": "90dab9ab-9ff7-42ad-aa82-d35b04cc67e3",
+		"name": "Collection - Fixed Assets",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Fixed Assets",
+			"item": [
+				{
+					"name": "Get all fixed assets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get fixed asset by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create fixed asset",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Computer HP XYZ\",\r\n  \"height\": 10,\r\n  \"length\": 5,\r\n  \"name\": \"Computer\",\r\n  \"purchase_date\": \"2022-10-11\",\r\n  \"purchase_value\": 1580,\r\n  \"serial\": \"ABC-123\",\r\n  \"type\": \"Electronic\",\r\n  \"weight\": 10,\r\n  \"width\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update fixed asset",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Computer Lenovo XYZ\",\r\n  \"height\": 10,\r\n  \"length\": 5,\r\n  \"name\": \"Computer\",\r\n  \"purchase_date\": \"2022-10-11\",\r\n  \"purchase_value\": 1580,\r\n  \"serial\": \"ABC-123\",\r\n  \"type\": \"Electronic\",\r\n  \"weight\": 10,\r\n  \"width\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign fixed to area",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fixed_id\": 1,\r\n    \"force_reassign\": true,\r\n    \"area_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/assign-fixed-to-area",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								"assign-fixed-to-area"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign fixed to person",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fixed_id\": 1,\r\n    \"force_reassign\": true,\r\n    \"person_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/assign-fixed-to-person",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								"assign-fixed-to-person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get fixed asset by Serial",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/get-by-serial/ABC-123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								"get-by-serial",
+								"ABC-123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get fixed asset by Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/get-by-type/Electronic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								"get-by-type",
+								"Electronic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get fixed asset by Purchase Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/fixed-assets/get-by-purchase-date/2022-10-11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"fixed-assets",
+								"get-by-purchase-date",
+								"2022-10-11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Area",
+			"item": [
+				{
+					"name": "Get all areas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/area",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"area"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get area by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/area/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"area",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create area",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"area_name\": \"Informatica\",\r\n    \"city\": \"Bogota\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/area",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"area"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update area",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"area_name\": \"Informatica\",\r\n    \"city\": \"Medellin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/area/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"area",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Person",
+			"item": [
+				{
+					"name": "Get all persons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/person",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get person by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/person/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"person",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create person",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"person_name\": \"Pedro Perez\",\r\n    \"document_number\": \"123456789\",\r\n    \"document_type\": \"CC\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/person",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"person"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update person",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"person_name\": \"Jhon Smith\",\r\n    \"document_number\": \"987654321\",\r\n    \"document_type\": \"CE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/person/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"person",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

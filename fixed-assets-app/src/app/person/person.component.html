@@ -1,0 +1,185 @@
+<!-- Table -->
+
+<div class="container">
+  <div class="row align-items-center">
+    <div *ngIf="errorResponse" class="col-lg-8 col-md-12 col-xl-12">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p class="alert-heading">REASON: {{errorResponse.reason}}</p>
+        <p class="alert-heading">CODE: {{errorResponse.code}}</p>
+        <p class="alert-heading">DOMAIN: {{errorResponse.domain}}</p>
+        <p class="alert-heading">DESCRIPTION: {{errorResponse.description}}</p>
+        <p class="alert-heading">TIMESTAMP: {{errorResponse.timestamp}}</p>
+        <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="successResponse" class="alert alert-success" role="alert">
+      <b>SUCCESS!</b> {{successResponse}}
+      <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="fas fa-times-circle"></i></span>
+      </button>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <h5 class="card-title">Persons <span class="text-muted fw-normal ms-2">({{persons.length}})</span></h5>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+        <div>
+          <a (click)="onOpenModal(null, 'add')" data-bs-toggle="modal" data-bs-target="#addPersonModal"
+            class="btn btn-primary"><i class="bx bx-plus me-1"></i> Add New</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form class="form-inline my-2 my-lg-0">
+    <input type="search" (ngModelChange)="searchPerson(key.value)" #key="ngModel" ngModel name="key" id="searchName"
+      class="form-control mr-sm-2" placeholder="Search Person..." required>
+  </form>
+  <div class="row">
+    <div class="col-lg-12">
+      <div *ngIf="persons?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+        <div class="alert alert-info" role="alert">
+          <h4 class="alert-heading">NO PERSON!</h4>
+          <p>No Persons were found.</p>
+        </div>
+      </div>
+      <div class="">
+        <div class="table-responsive">
+          <table class="table project-list-table table-nowrap align-middle table-borderless text-center">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 200px;">Action</th>
+                <th scope="col">Person Id</th>
+                <th scope="col">Person Name</th>
+                <th scope="col">Document Type</th>
+                <th scope="col">Document Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let person of persons">
+                <td>
+                  <ul class="list-inline mb-0">
+                    <li class="list-inline-item">
+                      <a (click)="onOpenModal(person, 'edit')" type="button" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#editPersonModal" data-bs-placement="top" title="Edit"
+                        class="px-2 text-primary"><i class="bx bx-pencil font-size-18"></i></a>
+                    </li>
+                  </ul>
+                </td>
+                <td><b>{{person?.person_id}}</b></td>
+                <td>{{person?.person_name}}</td>
+                <td>{{person?.document_type}}</td>
+                <td>{{person?.document_number}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <form #findForm="ngForm" class="form-inline my-2 my-lg-0">
+      <input type="number" ngModel name="person_id" id="person_id" class="form-control"
+        placeholder="Search Person By Id..." required>
+      <button (click)="getPersonsById(findForm.value)" type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addPersonModal" tabindex="-1" role="dialog" aria-labelledby="addPersonModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPersonModalLabel">Add Person</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddPerson(addForm)">
+          <div class="row">
+            <div>
+              <div class="mb-4 form-group">
+                <label for="person_name" class="form-label">Name</label>
+                <input type="text" ngModel name="person_name" id="person_name" class="form-control" required>
+              </div>
+            </div>
+            <div>
+              <div class="mb-4">
+                <label for="document_type" class="form-label">Document Type</label>
+                <input type="text" ngModel name="document_type" id="document_type" class="form-control" required>
+              </div>
+            </div>
+            <div>
+              <div class="mb-4">
+                <label for="document_number" class="form-label">Document Number</label>
+                <input type="text" ngModel name="document_number" id="document_number" class="form-control" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-person-form" class="btn btn-secondary"
+                data-bs-dismiss="modal">Close</button>
+              <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editPersonModal" tabindex="-1" role="dialog" aria-labelledby="editPersonModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editPersonModalLabel">Edit Person {{editPerson?.person_name}}</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+          <div class="form-group">
+            <input type="hidden" ngModel="{{editPerson?.person_id}}" name="person_id" class="form-control" id="id"
+              placeholder="person_id">
+            <label for="person_name">Person Name</label>
+            <input type="text" ngModel="{{editPerson?.person_name}}" name="person_name" class="form-control"
+              id="person_name" aria-describedby="emailHelp" placeholder="Person Name">
+          </div>
+          <div>
+            <div class="mb-4">
+              <label for="document_type" class="form-label">Document Type</label>
+              <input type="text" ngModel="{{editPerson?.document_type}}" name="document_type" id="document_type"
+                class="form-control">
+            </div>
+          </div>
+          <div>
+            <div class="mb-4">
+              <label for="document_number" class="form-label">Document Number</label>
+              <input type="text" ngModel="{{editPerson?.document_number}}" name="document_number" id="document_number"
+                class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="edit-person-form" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
+            <button [disabled]="editForm.invalid" (click)="onUpdatePerson(editForm.value)" data-dismiss="modal"
+              class="btn btn-primary">Save
+              changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

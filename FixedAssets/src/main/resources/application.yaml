@@ -1,0 +1,29 @@
+server:
+  port: ${PORT:8080}
+  name: Fixed_Assets
+
+logging:
+  level:
+    root: ${LOG4J_LEVEL:INFO}
+
+allowed-origins: ${ALLOWED_ORIGINS:http://localhost:4200}
+
+spring:
+  datasource:
+    url: ${URL_DATABASE:jdbc:postgresql://localhost:5432/db_fixed_assets}
+    username: ${USER_DATABASE:postgres}
+    password: ${PASSWORD_DATABASE:admin}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: ${SCHEMA:public}
+        non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        format_sql: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
